@@ -1,12 +1,15 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ChessBoard } from './components/ChessBoard';
+import { GameProvider } from './contexts/Game';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ChessBoard />
-    </View>
+    <GameProvider>
+      <View style={styles.container}>
+        <ChessBoard />
+      </View>
+    </GameProvider>
   );
 }
 
