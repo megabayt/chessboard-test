@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, useMemo, useReducer } from 'react';
+import React, { createContext, Dispatch, Reducer, useMemo, useReducer } from 'react';
 import {
   cellCount,
   totalCellsCount,
@@ -57,11 +57,12 @@ cells.forEach((cellColor, totalIndex) => {
   }
 });
 
+type GameAction = ReturnType<typeof chooseFigureAction | typeof moveFigureAction>;
 interface GameState {
   cells: Array<ChessColor>;
   figures: Array<ChessFigureObject>;
   selectedFigureIndex: number | null;
-  dispatch: Dispatch<ReturnType<typeof chooseFigureAction | typeof moveFigureAction>>;
+  dispatch: Dispatch<GameAction>;
 }
 
 const defaultValue: GameState = {
@@ -82,7 +83,7 @@ export const moveFigureAction = (index: number) => ({
   payload: index,
 });
 
-const gameReducer = (state, action) => {
+const gameReducer: Reducer<GameState, GameAction> = (state, action) => {
   switch (action.type) {
     case 'CHOOSE_FIGURE':
       return { ...state, selectedFigureIndex: action.payload };
@@ -90,10 +91,16 @@ const gameReducer = (state, action) => {
       return {
         ...state,
         selectedFigureIndex: null,
-        figures: state.figures.map(item => ({
-          ...item,
-          index: item.index === state.selectedFigureIndex ? action.payload : item.index,
-        })),
+        figures: state.figures.map(item => {
+          if (item.index !== state.selectedFigureIndex) {
+            return item;
+          }
+          return {
+            ...item,
+            index: action.payload,
+            stroke: state.cells[action.payload] === 'white' ? 'black' : 'white',
+          };
+        }),
       };
     default:
       return state;

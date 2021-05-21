@@ -1,7 +1,6 @@
-import React, { useCallback, useContext, useMemo } from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { Animated, TouchableOpacity } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
-import styled from 'styled-components';
 import { cellCount, cellHeight, cellWidth, pieceHeight, pieceWidth } from '../constants';
 import { chooseFigureAction, GameContext } from '../contexts/Game';
 import { ChessFigureImageProps, ChessFigureObject } from '../types';
@@ -12,6 +11,38 @@ export const ChessPiece = ({
   stroke,
   index: figureIndex,
 }: ChessFigureObject) => {
+  let top = useRef(new Animated.Value(0)).current;
+  let left = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const row = Math.floor(figureIndex / cellCount);
+    const index = figureIndex % cellCount;
+
+    const _top = (cellHeight * row) + ((cellHeight - pieceHeight) / 2);
+    const _left = (cellWidth * index) + ((cellWidth - pieceWidth) / 2);
+
+    Animated.timing(
+      top,
+      {
+        useNativeDriver: false,
+        toValue: _top,
+        duration: 500,
+      }
+    ).start(() => {
+      top = new Animated.Value(_top);
+    });
+    Animated.timing(
+      left,
+      {
+        useNativeDriver: false,
+        toValue: _left,
+        duration: 500,
+      }
+    ).start(() => {
+      left = new Animated.Value(_left);
+    });
+  }, [figureIndex]);
+
   const {
     dispatch,
     selectedFigureIndex,
@@ -21,52 +52,43 @@ export const ChessPiece = ({
     dispatch(chooseFigureAction(figureIndex));
   }, [dispatch, figureIndex]);
 
-  const { top, left } = useMemo(() => {
-    const row = Math.floor(figureIndex / cellCount);
-    const index = figureIndex % cellCount;
-
-    return {
-      top: (cellHeight * row) + ((cellHeight - pieceHeight) / 2),
-      left: (cellWidth * index) + ((cellWidth - pieceWidth) / 2),
-    };
-  }, [figureIndex]);
-
-  let Figure = Pawn;
-  switch (type) {
-    case 'knight':
-      Figure = Knight; break;
-    case 'bishop':
-      Figure = Bishop; break;
-    case 'rook':
-      Figure = Rook; break;
-    case 'queen':
-      Figure = Queen; break;
-    case 'king':
-      Figure = King; break;
-    default:
-    case 'pawn':
-      Figure = Pawn; break;
-  }
+  const Figure = useMemo(() => {
+    switch (type) {
+      case 'knight':
+        return Knight;
+      case 'bishop':
+        return Bishop;
+      case 'rook':
+        return Rook;
+      case 'queen':
+        return Queen;
+      case 'king':
+        return King;
+      default:
+      case 'pawn':
+        return Pawn;
+    }
+  }, [type]);
 
   return (
-    <Wrapper
-      top={top}
-      left={left}
-      disabled={selectedFigureIndex}
-      onPress={handleClickFigure}
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top,
+        left,
+        width: pieceWidth,
+        height: pieceHeight,
+      }}
     >
-      <Figure color={color} stroke={stroke} />
-    </Wrapper>
+      <TouchableOpacity
+        disabled={Boolean(selectedFigureIndex)}
+        onPress={handleClickFigure}
+      >
+        <Figure color={color} stroke={stroke} />
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
-
-const Wrapper = styled(TouchableOpacity)`
-  position: absolute;
-  top: ${props => props.top}px;
-  left: ${props => props.left}px;
-  width: ${pieceWidth}px;
-  height: ${pieceHeight}px;
-`;
 
 const Pawn = ({ color, stroke }: ChessFigureImageProps) => (
   <Svg height={pieceHeight} width={pieceWidth} viewBox="0 0 50 50">
