@@ -5,7 +5,7 @@ import { ChessFiguresMap, ChessFigureType } from '../types';
 
 // Create empty map where key is figure's position (index) 
 // on board and value is figure object
-const initialFiguresMap: ChessFiguresMap = {};
+export const initialFiguresMap: ChessFiguresMap = {};
 // Id for React's mandatory key prop
 let figureId = 1;
 [...new Array(totalCellsCount)].forEach((_, index) => {
@@ -39,12 +39,12 @@ let figureId = 1;
   }
 });
 
-type GameAction = ReturnType<
+export type GameAction = ReturnType<
   typeof chooseFigureAction
   | typeof moveFigureAction
   | typeof resetFigureAction
 >;
-interface GameState {
+export interface GameState {
   // Actual figures state (postion and color)
   figures: ChessFiguresMap;
   // Available moves for selected figure
@@ -80,7 +80,7 @@ export const resetFigureAction = () => ({
 });
 
 // Reducer for all actions
-const gameReducer: Reducer<GameState, GameAction> = (state, action) => {
+export const gameReducer: Reducer<GameState, GameAction> = (state, action) => {
   switch (action.type) {
     case 'CHOOSE_FIGURE':
       return {

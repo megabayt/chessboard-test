@@ -1,4 +1,15 @@
-import { add, getCellColor, getIndexFromRowColumn, getPawnMoves, getRowColumnFromIndex, getTopLeftFromIndex, sub } from "../helpers";
+import {
+  add,
+  getBishopMoves,
+  getCellColor,
+  getIndexFromRowColumn,
+  getKingMoves,
+  getPawnMoves,
+  getQueenMoves,
+  getRookMoves,
+  getRowColumnFromIndex,
+  sub,
+} from "../helpers";
 import { ChessFiguresMap } from "../types";
 
 test("function to get cell's color", () => {
@@ -63,30 +74,127 @@ test("subtraction", () => {
   }
 });
 
-// Get available moves for selected figure
-
-// getPawnMoves
 describe('Pawn available moves', () => {
   it("should go forward for two steps if it's first turn", () => {
     expect(
       getPawnMoves(
         {
           8: {
-
+            type: 'pawn',
+            color: 'black',
+            id: 1,
           }
         } as ChessFiguresMap,
-        10,
+        8,
       )
-    ).toBe([10, 20]);
+    ).toEqual([16, 24]);
+    expect(
+      getPawnMoves(
+        {
+          49: {
+            type: 'pawn',
+            color: 'white',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        49,
+      ).sort()
+    ).toEqual([33, 41]);
+  });
+  it("should go forward only for one step if it isn't first turn", () => {
+    expect(
+      getPawnMoves(
+        {
+          16: {
+            type: 'pawn',
+            color: 'black',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        16,
+      )
+    ).toEqual([24]);
+    expect(
+      getPawnMoves(
+        {
+          41: {
+            type: 'pawn',
+            color: 'white',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        41,
+      )
+    ).toEqual([33]);
+
   });
 });
 
-// getRookMoves
+describe('Rook available moves', () => {
+  it('should go vertical and horizontal', () => {
+    expect(
+      getRookMoves(
+        {
+          36: {
+            type: 'rook',
+            color: 'black',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        36,
+      ).sort(),
+    ).toEqual([12, 20, 28, 32, 33, 34, 35, 37, 38, 39, 4, 44, 52, 60]);
+  });
+});
 
-// getKnightMoves
+describe('Bishop available moves', () => {
+  it('should go vertical and horizontal', () => {
+    expect(
+      getBishopMoves(
+        {
+          36: {
+            type: 'bishop',
+            color: 'black',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        36,
+      ).sort(),
+    ).toEqual([0, 15, 18, 22, 27, 29, 43, 45, 50, 54, 57, 63, 9]);
+  });
+});
 
-// getBishopMoves
+describe('King available moves', () => {
+  it('should go vertical and horizontal', () => {
+    expect(
+      getKingMoves(
+        {
+          36: {
+            type: 'king',
+            color: 'black',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        36,
+      ).sort(),
+    ).toEqual([27, 28, 29, 35, 37, 43, 44, 45]);
+  });
+});
 
-// getKingMoves
+describe('Queen available moves', () => {
+  it('should go vertical and horizontal', () => {
+    expect(
+      getQueenMoves(
+        {
+          36: {
+            type: 'queen',
+            color: 'black',
+            id: 1,
+          }
+        } as ChessFiguresMap,
+        36,
+      ).sort(),
+    ).toEqual([0, 12, 15, 18, 20, 22, 27, 28, 29, 32, 33, 34, 35, 37, 38, 39, 4, 43, 44, 45, 50, 52, 54, 57, 60, 63, 9]);
+  });
+});
 
-// getQueenMoves
