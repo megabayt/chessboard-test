@@ -1,23 +1,22 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import styled from 'styled-components';
 import { ChessBoard } from './components/ChessBoard';
 import { GameProvider } from './contexts/Game';
 
 export default function App() {
   return (
     <GameProvider>
-      <View style={styles.container}>
+      <Wrapper>
         <ChessBoard />
-      </View>
+      </Wrapper>
     </GameProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Wrapper = styled(View)`
+  flex: 1;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+`;
