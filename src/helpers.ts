@@ -12,14 +12,29 @@ export const getCellColor = (index: number): ChessColor => {
 };
 
 // Calculate row and column from flat array's index
-export const getRowColumnFromIndex = (index: number) => ({
-  row: Math.floor(index / cellCount),
-  column: index % cellCount,
-});
+export const getRowColumnFromIndex = (index: number) => {
+  if (Number.isNaN(index) || index < 0 || index >= totalCellsCount) {
+    throw new Error('out of bounds');
+  }
+  return {
+    row: Math.floor(index / cellCount),
+    column: index % cellCount,
+  };
+}
 
 // Calculate flat array's index from row and column
-export const getIndexFromRowColumn = (row: number, column: number) =>
-  row * cellCount + column;
+export const getIndexFromRowColumn = (row: number, column: number) => {
+  if (Number.isNaN(row)
+    || Number.isNaN(column)
+    || row < 0
+    || column < 0
+    || column >= cellCount
+    || column >= cellCount
+  ) {
+    throw new Error('out of bounds');
+  }
+  return row * cellCount + column;
+}
 
 export const getTopLeftFromIndex = (index: number) => {
   const { row, column } = getRowColumnFromIndex(index);

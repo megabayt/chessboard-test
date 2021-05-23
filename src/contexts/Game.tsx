@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, Reducer, useMemo, useReducer } from 'react';
 import { totalCellsCount } from '../constants';
-import { getAvailableMoves, getCellColor, getRowColumnFromIndex } from '../helpers';
+import { getAvailableMoves, getRowColumnFromIndex } from '../helpers';
 import { ChessFiguresMap, ChessFigureType } from '../types';
 
 // Create empty map where key is figure's position (index) 
