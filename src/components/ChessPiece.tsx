@@ -10,7 +10,7 @@ export const ChessPiece = ({
   color,
   stroke,
   index: figureIndex,
-}: ChessFigureObject) => {
+}: ChessFigureObject & { index: number }) => {
   let top = useRef(new Animated.Value(0)).current;
   let left = useRef(new Animated.Value(0)).current;
 
@@ -78,6 +78,7 @@ export const ChessPiece = ({
         left,
         width: pieceWidth,
         height: pieceHeight,
+        backgroundColor: figureIndex === selectedFigureIndex ? 'green' : 'transparent',
       }}
     >
       <TouchableOpacity

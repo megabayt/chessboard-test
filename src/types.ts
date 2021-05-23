@@ -5,6 +5,6 @@ export interface ChessFigureImageProps {
   stroke: ChessColor;
 }
 export interface ChessFigureObject extends ChessFigureImageProps {
-  index: number;
+  id: number;
   type: ChessFigureType;
 }

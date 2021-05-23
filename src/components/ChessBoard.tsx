@@ -7,18 +7,21 @@ import {
   cellHeight,
   cellWidth,
 } from '../constants';
-import { GameContext, moveFigureAction } from '../contexts/Game';
+import { GameContext, resetFigureAction } from '../contexts/Game';
 import { ChessPiece } from './ChessPiece';
+import { AvailableMove } from './AvailableMove';
+
 export const ChessBoard = () => {
   const {
     cells,
     figures,
+    availableMoves,
     selectedFigureIndex,
     dispatch,
   } = useContext(GameContext);
 
-  const handleClickCell = useCallback((index) => () => {
-    dispatch(moveFigureAction(index));
+  const handleClickCell = useCallback(() => {
+    dispatch(resetFigureAction());
   }, [dispatch]);
 
   return (
@@ -28,15 +31,18 @@ export const ChessBoard = () => {
         {cells.map((cellColor, index) => (
           <TouchableOpacity
             disabled={!selectedFigureIndex}
-            onPress={handleClickCell(index)}
+            onPress={handleClickCell}
             key={index}
           >
             <Cell color={cellColor}>
             </Cell>
           </TouchableOpacity>
         ))}
-        {figures.map((figure, index) => (
-          <ChessPiece {...figure} key={index} />
+        {Object.keys(figures).map((index) => figures[index] && (
+          <ChessPiece {...figures[index]} index={Number(index)} key={figures[index].id} />
+        ))}
+        {availableMoves.map((availableMove) => (
+          <AvailableMove index={availableMove} key={availableMove} />
         ))}
       </Wrapper>
     </>
