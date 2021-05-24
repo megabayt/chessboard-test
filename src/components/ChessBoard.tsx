@@ -24,7 +24,7 @@ export const ChessBoard = () => {
   } = useContext(GameContext);
 
   const handleClickCell = useCallback(() => {
-    // If clicked on not avaliable move - reset selected figure
+    // If clicked on unavaliable move - reset selected figure
     dispatch(resetFigureAction());
   }, [dispatch]);
 
